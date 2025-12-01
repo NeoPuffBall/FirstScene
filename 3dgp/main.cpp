@@ -16,6 +16,9 @@ using namespace glm;
 
 // 3D models
 C3dglModel camera;
+C3dglModel table;
+C3dglModel vase;
+C3dglModel room;
 
 // The View Matrix
 mat4 matrixView;
@@ -40,6 +43,9 @@ bool init()
 
 	// load your 3D models here!
 	if (!camera.load("models\\camera.3ds")) return false;
+	if (!table.load("models\\table.obj")) return false;
+	if (!vase.load("models\\vase.obj")) return false;
+	if (!room.load("models\\LivingRoom.obj")) return false;
 
 	// Initialise the View Matrix (initial position of the camera)
 	matrixView = rotate(mat4(1), radians(12.f), vec3(1, 0, 0));
@@ -73,10 +79,61 @@ void renderScene(mat4& matrixView, float time, float deltaTime)
 
 	// camera
 	m = matrixView;
-	m = translate(m, vec3(-3.0f, 0, 0.0f));
+	m = translate(m, vec3(-8.0f, 10.0f, 13.0f));
 	m = rotate(m, radians(180.f), vec3(0.0f, 1.0f, 0.0f));
 	m = scale(m, vec3(0.04f, 0.04f, 0.04f));
+	m = rotate(m, radians(30.f), vec3(0.0f, 1.0f, 0.0f));
+	m = rotate(m, radians(15.f), vec3(0.0f, 0.0f, 1.0f));
 	camera.render(m);
+
+	//table
+	m = matrixView;
+	m = translate(m, vec3(3.0f, 0, 0.0f));
+	m = scale(m, vec3(0.01f, 0.01f, 0.01f));
+	table.render(2, m);
+
+	//chair 1
+	m = matrixView;
+	m = translate(m, vec3(3.0f, 0, 0.0f));
+	m = scale(m, vec3(0.01f, 0.01f, 0.01f));
+	table.render(0, m);
+	table.render(1, m);
+
+	//chair 2
+	m = matrixView;
+	m = translate(m, vec3(3.0f, 0, 0.25f));
+	m = scale(m, vec3(0.01f, 0.01f, 0.01f));
+	m = rotate(m, radians(180.0f), vec3(0.0f, 1.0f, 0.0f));
+	table.render(0, m);
+	table.render(1, m);
+
+	//chair 3
+	m = matrixView;
+	m = translate(m, vec3(5.0f, 0, 0.0f));
+	m = scale(m, vec3(0.01f, 0.01f, 0.01f));
+	m = rotate(m, radians(90.0f), vec3(0.0f, 1.0f, 0.0f));
+	table.render(0, m);
+	table.render(1, m);
+
+	//chair 4
+	m = matrixView;
+	m = translate(m, vec3(1.0f, 0, 0.0f));
+	m = scale(m, vec3(0.01f, 0.01f, 0.01f));
+	m = rotate(m, radians(-90.0f), vec3(0.0f, 1.0f, 0.0f));
+	table.render(0, m);
+	table.render(1, m);
+
+	//vase
+	m = matrixView;
+	m = translate(m, vec3(3.0f, 7.61, 0.0f));
+	m = scale(m, vec3(0.15f, 0.15f, 0.15f));
+	vase.render(0, m);
+
+	//room
+	m = matrixView;	
+	m = translate(m, vec3(3.0f, 0, -6.0f));
+	m = scale(m, vec3(0.05f, 0.05f, 0.05f));
+	room.render(0,m);
 
 	// setup materials - blue
 	GLfloat rgbaBlue[] = { 0.2f, 0.2f, 0.8f, 1.0f };		// --- DEPRECATED
@@ -85,13 +142,15 @@ void renderScene(mat4& matrixView, float time, float deltaTime)
 
 	// teapot
 	m = matrixView;
-	m = translate(m, vec3(15.0f, 0, 0.0f));
+	m = translate(m, vec3(0.0f, 8.39f, 0.0f));
 	m = rotate(m, radians(120.f), vec3(0.0f, 1.0f, 0.0f));
 	// the GLUT objects require the Model View Matrix setup
 	glMatrixMode(GL_MODELVIEW);								// --- DEPRECATED
 	glLoadIdentity();										// --- DEPRECATED
 	glMultMatrixf((GLfloat*)&m);							// --- DEPRECATED
-	glutSolidTeapot(2.0);
+	glutSolidTeapot(1.0);
+
+	
 }
 
 void onRender()

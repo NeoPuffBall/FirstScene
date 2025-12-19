@@ -15,10 +15,11 @@ using namespace _3dgl;
 using namespace glm;
 
 // 3D models
-C3dglModel camera;
+
 C3dglModel table;
 C3dglModel vase;
 C3dglModel room;
+C3dglModel chicken;
 
 //GLSL Program
 C3dglProgram program;
@@ -46,9 +47,9 @@ bool init()
 	
 
 	float vertices[] = {
-		-4, 0, -4, 4, 0, -4, 0, 7, 0, -4, 0, 4, 4, 0, 4, 0, 7, 0,
-		-4, 0, -4, -4, 0, 4, 0, 7, 0, 4, 0, -4, 4, 0, 4, 0, 7, 0,
-		-4, 0, -4, -4, 0, 4, 4, 0, -4, 4, 0, 4 };
+		-4, 0.76, 4, -2, 0.76, 4, -3, -0.76, 5, -4, 0.76, 6, -2, 0.76, 6, -3, -0.76, 5,
+		-4, 0.76, 4, -4, 0.76, 6, -3, -0.76, 5, -2, 0.76, 4, -2, 0.76, 6, -3, -0.76, 5,
+		-4, 0.76, 4, -4, 0.76, 6, -2, 0.76, 4, -2, 0.76, 6 };
 
 	float normals[] = {
 	0, 4, -7, 0, 4, -7, 0, 4, -7, 0, 4, 7, 0, 4, 7, 0, 4, 7,
@@ -96,10 +97,10 @@ bool init()
 	glutSetVertexAttribNormal(program.getAttribLocation("aNormal"));
 
 	// load your 3D models here!
-	if (!camera.load("models\\camera.3ds")) return false;
 	if (!table.load("models\\table.obj")) return false;
 	if (!vase.load("models\\vase.obj")) return false;
 	if (!room.load("models\\LivingRoom.obj")) return false;
+	if (!chicken.load("models\\chicken.obj")) return false;
 
 	// Initialise the View Matrix (initial position of the camera)
 	matrixView = rotate(mat4(1), radians(12.f), vec3(1, 0, 0));
@@ -154,17 +155,10 @@ void renderScene(mat4& matrixView, float time, float deltaTime)
 	glDisableVertexAttribArray(attribVertex);
 	glDisableVertexAttribArray(attribNormal);
 
+	
+
 	// setup materials - grey
 	program.sendUniform("material", vec3(0.6f, 0.6f, 0.6f));
-
-	// camera
-	m = matrixView;
-	m = translate(m, vec3(-8.0f, 10.0f, 13.0f));
-	m = rotate(m, radians(180.f), vec3(0.0f, 1.0f, 0.0f));
-	m = scale(m, vec3(0.04f, 0.04f, 0.04f));
-	m = rotate(m, radians(30.f), vec3(0.0f, 1.0f, 0.0f));
-	m = rotate(m, radians(15.f), vec3(0.0f, 0.0f, 1.0f));
-	camera.render(m);
 
 	//room
 	m = matrixView;
@@ -221,6 +215,15 @@ void renderScene(mat4& matrixView, float time, float deltaTime)
 	m = scale(m, vec3(0.15f, 0.15f, 0.15f));
 	vase.render(0, m);
 
+	// setup materials - green
+	program.sendUniform("material", vec3(0.0f, 1.0f, 0.0f));
+
+	// chicken
+	m = matrixView;
+	m = translate(m, vec3(5.8f, 9.15f, 0.1f));
+	m = rotate_slow(m, radians(-90.0f), vec3(0.0f, 1.0f, 0.0f));
+	m = scale(m, vec3(4.0f, 4.0f, 4.0f));
+	chicken.render(0, m);
 
 	// setup materials - blue
 	program.sendUniform("material", vec3(0.2f, 0.2f, 0.8f));
